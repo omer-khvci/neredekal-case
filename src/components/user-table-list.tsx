@@ -77,8 +77,7 @@ const UserTableList = (props: UserTableListProps) => {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Container sx={{}}>
-        {/*<TableContainer>*/}
+      <Container>
         <CustomTable aria-label="simple table">
           <TableHead>
             <TableRow>
