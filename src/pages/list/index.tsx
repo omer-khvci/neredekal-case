@@ -17,6 +17,7 @@ const Page = () => {
   const limit =  Number(process.env.NEXT_PUBLIC_PAGE_SIZE);
   const [page, setPage] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [backDrop, setBackDrop] = useState(false);
   const [totalCount, setTotalCount] = useState<number>(0);
 
   useEffect(() => {
@@ -25,10 +26,12 @@ const Page = () => {
 
 
   const changePage = ()=>{
+    setBackDrop(true);
     setPage(page+1)
   }
 
   const getUserList = async () => {
+    setBackDrop(true);
     const response = await UserService.GetAll(limit, limit * page);
 
     if (response.status === 200) {
@@ -40,6 +43,7 @@ const Page = () => {
         setHasMore(false);
       }
     }
+    setBackDrop(false);
   };
 
   return (
@@ -61,7 +65,7 @@ const Page = () => {
           </Button>
         </ButtonGroup>
       </Box>
-      {viewType == 1 && <UserTableList data={data} hasMore={hasMore} loadData={changePage}  totalCount={totalCount} />}
+      {viewType == 1 && <UserTableList data={data} backDrop={backDrop} loadData={changePage}  totalCount={totalCount} />}
 
       {viewType == 2 && <UserCardList data={data} hasMore={hasMore} loadData={changePage}/>}
     </>

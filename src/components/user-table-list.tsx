@@ -49,24 +49,24 @@ const HeadTableCell = styled(TableCell)(({ theme }) => ({
 
 type UserTableListProps = {
   data: User[];
-  hasMore: boolean;
+  backDrop: boolean;
   loadData: () => void;
   totalCount: number;
 };
 
 const UserTableList = (props: UserTableListProps) => {
-  const { data, loadData, hasMore, totalCount } = props;
+  const { data, loadData, backDrop, totalCount } = props;
 
   const itemPerPage = Number(process.env.NEXT_PUBLIC_PAGE_SIZE);
   const [currentPage, setCurrentPage] = useState(0);
 
-  const [backDrop, setBackDrop] = useState(false);
-
   const handleChangePage = (event: any, newPage: number) => {
     if (itemPerPage * newPage >= data.length) {
       loadData();
+
     }
     setCurrentPage(newPage);
+    
   };
 
   return (
@@ -120,7 +120,6 @@ const UserTableList = (props: UserTableListProps) => {
           page={currentPage}
           onPageChange={handleChangePage}
         />
-        {/*</TableContainer>*/}
       </Container>
     </>
   );
