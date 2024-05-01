@@ -12,10 +12,10 @@ const UserService = {
     },
     GetUserInfo: async (id:number) => {
         const url = `${ApiUrl}/users/${id}`
-        const response = await axios(url)
-
-        return response
+        const response = await axios(url);
+        return response;
     },
+    
 
 
 }

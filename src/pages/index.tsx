@@ -6,12 +6,10 @@ export default function Home() {
   const router = useRouter()
   useEffect(() => {
       if (!router.isReady) return;
-      router.push('home')
+      router.push('/list')
   }, [router])
   return (
     <>
-     
-      
       
     </>
   );

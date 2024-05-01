@@ -1,126 +1,70 @@
-import {
-  Avatar,
-  Backdrop,
-  Button,
-  CircularProgress,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  styled,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
+import * as React from "react";
+import { useState } from "react";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import { Box } from "@mui/material";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import UserTableList from "@/components/user-table-list";
+import UserCardList from "@/components/user-card-list";
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import UserService from "../../../services/user-service";
-import { UserViewModel } from "@/models/userViewModel";
-import Link from "next/link";
+import { User } from "@/models/user";
+import { useEffect } from "react";
 
-const List = () => {
-  const maxPageSize = Number(process.env.NEXT_PUBLIC_PAGE_SIZE);
-  const [totalCount, setTotalCount] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [backDrop, setBackDrop] = useState(false);
-  const [data, setData] = useState<UserViewModel>();
+const Page = () => {
+  const [viewType, setViewType] = useState(1);
+  const [data, setData] = useState<User[]>([]);
+  const limit =  Number(process.env.NEXT_PUBLIC_PAGE_SIZE);
+  const [page, setPage] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [totalCount, setTotalCount] = useState<number>(0);
 
-  const handleChangePage = (event: any, newPage: number) => {
-    setCurrentPage(newPage);
-    getUserList(maxPageSize, newPage);
-    setBackDrop(true);
-  };
-
-  const getUserList = async (limit: number, page: number) => {
-    const response = await UserService.GetAll(limit, limit * page);
-    if (response.status === 200) {
-      setData(response.data);
-      setTotalCount(response.data.total);
-    }
-    setBackDrop(false);
-  };
   useEffect(() => {
-    getUserList(maxPageSize, currentPage);
-  }, []);
+    getUserList()
+  }, [page]);
 
-  const CustomTableCell = styled(TableCell)(({ theme }) => ({
-    color: "#000",
-    fontSize: "14px",
-    fontFamily: "Montserrat",
-    fontStyle: "normal",
-    fontWeight: "400",
-    lineeHight: "normal",
-  }));
+
+  const changePage = ()=>{
+    setPage(page+1)
+  }
+
+  const getUserList = async () => {
+    const response = await UserService.GetAll(limit, limit * page);
+
+    if (response.status === 200) {
+      
+        setTotalCount(response.data.total)
+      const totalCount = data.length + response.data.users.length;
+      setData(data.concat(response.data.users));
+      if (totalCount >= response.data.total) {
+        setHasMore(false);
+      }
+    }
+  };
+
   return (
     <>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={backDrop}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "end",
+          marginBottom: "5px",
+        }}
       >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-      <TableContainer>
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell></TableCell>
-              <CustomTableCell align="right">Name</CustomTableCell>
-              <CustomTableCell align="right">Email</CustomTableCell>
-              <CustomTableCell align="right">Phone</CustomTableCell>
-              <CustomTableCell align="right">Website</CustomTableCell>
-              <CustomTableCell align="right">Company Name</CustomTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody
-            sx={{
-              height: "85px",
-              borderRadius: "8px",
-              background: "#FFF",
-            }}
-          >
-            {data?.users?.map((user, index) => (
-              <TableRow key={index}>
-                <TableCell>
-                  <Avatar
-                    sx={{ width: 34, height: 34 }}
-                    alt={user.firstName + " " + user.lastName}
-                    src={user.image}
-                  ></Avatar>
-                </TableCell>
+        <ButtonGroup variant="contained" aria-label="Basic button group">
+          <Button onClick={() => setViewType(1)}>
+            <FormatListBulletedIcon />
+          </Button>
+          <Button onClick={() => setViewType(2)}>
+            <ViewModuleIcon />
+          </Button>
+        </ButtonGroup>
+      </Box>
+      {viewType == 1 && <UserTableList data={data} hasMore={hasMore} loadData={changePage}  totalCount={totalCount} />}
 
-                <CustomTableCell align="right">{`${user.firstName}`}</CustomTableCell>
-                <CustomTableCell align="right">{user.email}</CustomTableCell>
-                <CustomTableCell align="right">{user.phone}</CustomTableCell>
-                <CustomTableCell align="right">{user.domain}</CustomTableCell>
-                <CustomTableCell align="right">
-                  <Link href="">{user.company.name}</Link>
-                </CustomTableCell>
-                <CustomTableCell
-                  align="right"
-                  sx={{ borderTop: "1px solid rgba(224, 224, 224, 1);" }}
-                >
-                  <Button>
-                    <img src="/img/pen-1.svg" alt="" />
-                  </Button>
-                  <Button>
-                    <img src="/img/trash-1.svg" alt="" />
-                  </Button>
-                </CustomTableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[maxPageSize]}
-          component="div"
-          count={totalCount}
-          rowsPerPage={rowsPerPage}
-          page={currentPage}
-          onPageChange={handleChangePage}
-        />
-      </TableContainer>
+      {viewType == 2 && <UserCardList data={data} hasMore={hasMore} loadData={changePage}/>}
     </>
   );
 };
-
-export default List;
+export default Page;
