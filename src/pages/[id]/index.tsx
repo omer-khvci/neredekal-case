@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useRouter} from "next/router";
-import {Avatar, Box, Card, CardContent, Grid, styled, Typography} from "@mui/material";
+import {Avatar, Box, Card, CardContent, Container, Grid, styled, Typography} from "@mui/material";
 import {User} from "@/models/user";
 import UserService from "../../../services/user-service";
 
@@ -51,15 +51,15 @@ const Page = () => {
     }, [userId])
 
     return (
-        <>
+        <Container>
         <FlexBox sx={{marginBottom:"20px"}}>
             <Card sx={{width: '100%', maxWidth: '150'}}>
                 <CardContent>
                     <Grid container>
-                        <Grid item lg={1}>
+                        <Grid item lg={2}>
                     <Avatar src={user?.image} sx={{width: '100px', height: '100px', paddingTop:"35px"}}/>
                     </Grid>
-                    <Grid container item mt={5} rowSpacing={0} lg={11}>
+                    <Grid container item mt={5} rowSpacing={0} lg={10}>
                         <Grid item xs={12}>
                             <Typography>
                                 {user?.firstName} {user?.lastName}</Typography>
@@ -285,7 +285,7 @@ const Page = () => {
             </Card>
        </Grid>
        </Grid>
-       </>
+       </Container>
     )
 }
 
