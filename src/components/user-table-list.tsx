@@ -101,7 +101,7 @@ const UserTableList = (props: UserTableListProps) => {
               ?.map((user, index) => (
                 <TableRowStyled key={index}>
                   <CustomTableCell align="left">
-                    <Link href={`/${user.id}`}>{`${user.firstName}`}</Link>
+                    <Link href={`user-detail/${user.id}`}>{`${user.firstName}`}</Link>
                   </CustomTableCell>
 
                   <CustomTableCell align="center">

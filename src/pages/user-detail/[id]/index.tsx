@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import {Avatar, Box, Card, CardContent, Container, Grid, styled, Typography} from "@mui/material";
 import {User} from "@/models/user";
-import UserService from "../../../services/user-service";
+import UserService from "../../../../services/user-service";
 
 const FlexBox = styled(Box)(({theme}) => ({
     display: 'flex',
@@ -16,7 +16,6 @@ const TypographyCustom = styled(Typography)(({theme})=>({
 const Page = () => {
     const router = useRouter();
     const {id} = router.query
-
     const [userId, setUserId] = useState<number | null>(null);
 
     const [user, setUser] = useState<User | null>(null);
@@ -26,7 +25,6 @@ const Page = () => {
         if (response.status === 200) {
             setUser(response.data);
         }
-        console.log(response)
     }
 
     useEffect(() => {

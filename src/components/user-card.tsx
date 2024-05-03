@@ -28,7 +28,7 @@ const UserCard = (props: UserCardType) => {
         }
       }}
     >
-      <CardActionArea href={`/${props.user.id}`}>
+      <CardActionArea href={`user-detail/${props.user.id}`}>
         <CardMedia
           component="img"
           height="300"
